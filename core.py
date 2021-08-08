@@ -35,16 +35,18 @@ class Core():
         orderbook = pyupbit.get_orderbook(self.ticker)
         sell_price = (orderbook[0]['ask_price'])
         # unit = krw/(sell_price*0.9995)
-        self.account.buy_market_order(self.ticker, sell_price)
+        self.account.buy_market_order(self.ticker, sell_price) # 시장가로 
 
     def sell_crypto_currency(self):
-        unit = self.account.get_balance(self.ticker)
-        self.account.sell.market_order(self.ticker, unit)
+        unit = self.account.get_balance(self.ticker)  # 해당하는 암호화폐의 잔량
+        self.account.sell_market_order(self.ticker, unit)  # 시장가로 전량 매도
 
 
-now = datetime.datetime.now()  # 현재 시각
-mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(1)
-core = Core(None, None, 'KRW-XRP')
+now = datetime.datetime.now()  # 현재 날짜와 시각
+mid = datetime.datetime(now.year, now.month, now.day, 9, 0, 0)
++ datetime.timedelta(days=1)
+# 다음날 아침 9시가 업비트 종가 기준
+core = Core(None, None, 'KRW-XRP')  # api key와 가져올 화폐를 인자로 객체 생성
 
 while True:
     try:
