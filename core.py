@@ -13,6 +13,9 @@ class Core():
         # 기준통화-암호화폐
         self.account = pyupbit.Upbit(access_key, secret_key)
         # 계정 정보를 저장
+        
+    def calc_noise(self):
+        pass
 
     def get_target_price(self):
         df = pyupbit.get_ohlcv(self.ticker)
@@ -46,7 +49,10 @@ now = datetime.datetime.now()  # 현재 날짜와 시각
 mid = datetime.datetime(now.year, now.month, now.day, 9, 0, 0)
 + datetime.timedelta(days=1)
 # 다음날 아침 9시가 업비트 종가 기준
-core = Core(None, None, 'KRW-XRP')  # api key와 가져올 화폐를 인자로 객체 생성
+ticker = ['KRW-BCHA', 'KRW-BTC', 'KRW-XRP', 'KRW-ETC', 'KRW-ETH', 'KRW-ADA',
+          'KRW-BTG', 'KRW-EOS', 'KRW-BCH', 'KRW-OMG', 'KRW-XLM', 'KRW-LTC',
+          'KRW-XTZ']
+core = Core(None, None, ticker)  # api key와 가져올 화폐를 인자로 객체 생성
 
 while True:
     try:
