@@ -1,16 +1,14 @@
 import pyupbit
 import numpy as np
 
-tickers = ['KRW-BCHA', 'KRW-BTC', 'KRW-XRP', 'KRW-ETC', 'KRW-ETH', 'KRW-ADA',
-          'KRW-BTG', 'KRW-EOS', 'KRW-BCH', 'KRW-OMG', 'KRW-XLM', 'KRW-LTC',
-          'KRW-XTZ']
+tickers = pyupbit.get_tickers(fiat='KRW')
 invest_ticker = []
 
 for ticker in tickers: 
-    df = pyupbit.get_ohlcv(ticker, count=20, interval="day")
+    df = pyupbit.get_ohlcv(ticker, count=30, interval="day")
     # KRW-BTC 일봉 데이터
     df['noise'] = 1 - abs((df['open']-df['close'])/(df['high']-df['low']))
-    noise = df['noise'].sum()/20
+    noise = df['noise'].sum()/30
     # 30일 전체 noise에 대한 평균 noise 산출
     df['range'] = (df['high'] - df['low']) * noise
     # 마지막 열이 자동으로 추가됨
