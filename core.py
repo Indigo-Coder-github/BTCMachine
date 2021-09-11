@@ -3,6 +3,7 @@ import pyupbit
 import time
 import backtesting
 
+
 class Core():
 
     def __init__(self, access_key, secret_key, ticker):
@@ -13,9 +14,6 @@ class Core():
         # 기준통화-암호화폐
         self.account = pyupbit.Upbit(access_key, secret_key)
         # 계정 정보를 저장
-        
-    def calc_noise(self):
-        pass
 
     def get_target_price(self):
         df = pyupbit.get_ohlcv(self.ticker)
@@ -49,7 +47,11 @@ now = datetime.datetime.now()  # 현재 날짜와 시각
 mid = datetime.datetime(now.year, now.month, now.day, 9, 0, 0)
 + datetime.timedelta(days=1)
 # 다음날 아침 9시가 업비트 종가 기준
-core = Core(None, None, backtesting.invest_ticker)  # api key와 가져올 화폐를 인자로 객체 생성
+core = Core(None, None, backtesting.invest_ticker)
+# api key와 가져올 화폐를 인자로 객체 생성
+backtesting = backtesting.Backtesting(
+    pyupbit.get_tickers(fiat='KRW'),
+    (datetime.datetime.now()-datetime.timedelta(days=1)).strftime('%Y%m%d'))
 
 while True:
     try:
@@ -60,7 +62,8 @@ while True:
             +datetime.timedelta(1)
             core.sell_crypto_currency()  # 종시에 판매
 
-        current_price = pyupbit.get_current_price('KRW-XRP')  # 현재가 조회
+        current_price = pyupbit.get_current_price(backtesting.calc_noise())
+        # 현재가 조회
         if current_price >= target_price:  # 현재가가 매수 목표가 이상이면
             core.buy_crypto_currency()  # 해당 가격에 구매
     except Exception:
