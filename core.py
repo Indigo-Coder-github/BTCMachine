@@ -49,8 +49,8 @@ now = datetime.datetime.now()  # 현재 날짜와 시각
 mid = datetime.datetime(now.year, now.month, now.day, 9, 0, 0)
 + datetime.timedelta(days=1)
 # 다음날 아침 9시가 업비트 종가 기준
-core = Core(None, None,
-            bt.instance.get_invest_ticker(), bt.instance.get_ticker_k())
+invest_ticker, ticker_k = bt.instance.calc_noise()
+core = Core(None, None, invest_ticker, ticker_k)
 # api key와 가져올 화폐를 인자로 객체 생성
 
 while True:
