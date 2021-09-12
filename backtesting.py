@@ -5,13 +5,14 @@ import numpy as np
 
 class Backtesting():
 
-    def __init__(self, tickers, yesterday, invest_ticker, ticker_k):
+    def __init__(self, tickers, yesterday):
         self.tickers = tickers
         self.yesterday = yesterday
-        self.invest_ticker = invest_ticker
-        self.ticker_k = ticker_k
 
     def calc_noise(self):
+        
+        invest_ticker = []
+        ticker_k = []
 
         for ticker in self.tickers:
             df = pyupbit.get_ohlcv(ticker, count=30, interval="day",
@@ -30,22 +31,17 @@ class Backtesting():
             # 각 행마다 고가가 목표가를 넘었으면 수익률인 종가와 목표가의 나눈 값을, 아닌 경우 매수하지 않았으므로 수익률은 1
             # ror = df['ror'].cumprod()[-2]
             # 기간수익률은 모든 수익률의 곱과 동일
-            self.invest_ticker.append([noise, ticker])
-        self.invest_ticker.sort()
-        self.invest_ticker = self.invest_ticker[:5]
-        for i, j in zip(self.invest_ticker, range(0, len(self.invest_ticker))):
-            self.invest_ticker[j] = i[1]
-            self.ticker_k.append(i[0])
-
-    def get_invest_ticker(self):
-        return self.invest_ticker
-
-    def get_ticker_k(self):
-        return self.ticker_k
+            invest_ticker.append([noise, ticker])
+        invest_ticker.sort()
+        invest_ticker = invest_ticker[:5]
+        for i, j in zip(invest_ticker, range(0, len(invest_ticker))):
+            invest_ticker[j] = i[1]
+            ticker_k.append(i[0])
+            
+        return invest_ticker, ticker_k
 
 
 instance = Backtesting(
     pyupbit.get_tickers(fiat='KRW'),
-    (datetime.datetime.now()-datetime.timedelta(days=1)).strftime('%Y%m%d'),
-    [], [])
-print(instance.get_invest_ticker())
+    (datetime.datetime.now()-datetime.timedelta(days=1)).strftime('%Y%m%d'))
+print(instance.calc_noise())
